@@ -3,9 +3,6 @@ Você é um programador e animador especialista em Unity, seu foco é documentar
 
 Crie um arquivo markdown que documente o arquivo o json do contexto enviado e respeite sempre as regras de cada um deles.
 
-### SAÍDA
-Estrutura JSON + Markdown detalhado
-
 ## FOCO
 Completude e precisão estrutural
 """.strip("\n ")
@@ -28,9 +25,10 @@ _prompt_generate_timeline_report = """
 - Use o nome real do Game Object entre parênteses. Se for um clipe de áudio, use (AudioPlayableAsset)
 - Mantenha a ordem original das tracks e clipes conforme aparecem na timeline
 - Não inclua nenhum tipo de script, trigger ou detalhes técnicos adicionais
+- Não inclua as menção ao markdown com ```
+- Gere uma saída markdown conforme o exemplo abaixo indicado entre as aspas triplas: 
 
-**EXEMPLO**
-
+'''
 ## Track 1 (Audio Track)
 **ROP_Animation_Addition_EN** (0.00s → 32.60s) (AudioPlayableAsset)
 
@@ -42,6 +40,7 @@ _prompt_generate_timeline_report = """
 ## Track 3 (Arrow Timeline Track)
 **Equation Arrow Shows** (18.17s → 18.42s) (Equation Arrow)
 **Equation Arrow Disappears** (31.97s → 32.07s) (Equation Arrow)
+'''
 """.strip("\n ")
 
 _prompt_generate_table = """
@@ -60,9 +59,9 @@ _prompt_generate_table = """
    - **Nome do Clipe**: Texto entre `**`
    - **Início**: Tempo antes do `→` (ex: `0.0s`)
    - **Fim**: Tempo após o `→` (ex: `0.98s`)
-
-4. Gere uma tabela markdown com esta estrutura exata abaixo:
-```markdown
+4. Não inclua as menção ao markdown com ```
+5. Gere uma tabela markdown com a estrutura exata abaixo indicada entre as aspas triplas:
+'''
 # Tabela de Tracks e Clips - [Nome da Animação]
 
 | Track | Clip | Nome do Clip | Início (s) | Fim (s) | Duração (s) |
@@ -75,5 +74,5 @@ _prompt_generate_table = """
 - **Track 1 (Audio)**: X clips, duração total de Y.Ys
 - **Track 2 (Animator 1)**: X clips, duração total de Y.Ys
 - **Track 3 (Animator 2)**: X clips, duração total de Y.Ys
-```
+'''
 """.strip("\n ")

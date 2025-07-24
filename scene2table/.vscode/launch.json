@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug (module) scene2table.cli",
+      "type": "python",
+      "request": "launch",
+      "module": "scene2table.cli",
+      "cwd": "${workspaceFolder}/src",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": [
+        "--scene",
+        "/Users/italocf/git/prims_vr_automations/animation_guide/extraction/Enhanced_1_4_ROP_Animation_Addition_20250620_113653/SUMMARY.json",
+        "--output",
+        "/Users/italocf/git/unity-migration-studio/scene2table/output"
+      ]
+    }
+  ]
+}

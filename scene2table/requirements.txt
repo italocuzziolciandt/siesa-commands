@@ -1,1 +1,1 @@
-mos-studios-commands @ https://storage.googleapis.com/mos-studios-and-commands-artifacts/contrib_packages/mos_studios_commands/mos_studios_commands-3.0.1-py3-none-any.whl
+mos-studios-commands @ https://storage.googleapis.com/mos-studios-and-commands-artifacts/contrib_packages/mos_studios_commands/mos_studios_commands-4.3.4-py3-none-any.whl

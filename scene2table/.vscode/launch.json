@@ -11,7 +11,7 @@
       "justMyCode": false,
       "args": [
         "--scene",
-        "/Users/italocf/git/prims_vr_automations/animation_guide/extraction/Enhanced_1_4_ROP_Animation_Addition_20250620_113653/SUMMARY.json",
+        "/Users/italocf/git/prims_vr_automations/automation_test/multiple_files",
         "--output",
         "/Users/italocf/git/unity-migration-studio/scene2table/output"
       ]

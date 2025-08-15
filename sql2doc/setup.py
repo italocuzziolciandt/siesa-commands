@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="scene2table",
+    name="sql2doc",
     version="1.0.0",
     author="CI&T Flow",
-    description="Gerar tabela sintética de tracks e clips a partir de uma cena descrita em json.",
+    description="Gerador de documentações.",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=open("requirements.txt").read().splitlines(),
@@ -16,7 +16,7 @@ setup(
     python_requires=">=3.11",
     entry_points={
         "console_scripts": [
-            "scene2table=scene2table.cli:main",
+            "sql2doc=sql2doc.cli:main",
         ],
     },
 )

@@ -1,0 +1,5 @@
+{
+  "python.analysis.extraPaths": [
+    "./sql2doc/src/sql2doc/feature_analyzer/models"
+  ]
+}

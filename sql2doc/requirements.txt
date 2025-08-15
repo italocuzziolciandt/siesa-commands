@@ -1,0 +1,16 @@
+mos-studios-commands @ https://storage.googleapis.com/mos-studios-and-commands-artifacts/contrib_packages/mos_studios_commands/mos_studios_commands-1.0.1-py3-none-any.whl
+prompter @ https://storage.googleapis.com/prompter-modernization/prompter-0.4.6-py3-none-any.whl
+click
+langchain-openai~=0.3.4
+langchain-google-genai
+langchain~=0.3.18
+langchain-community~=0.3.16
+tiktoken~=0.8.0
+requests
+langgraph
+chardet
+pillow
+retry
+markdown
+WeasyPrint
+numpy<2

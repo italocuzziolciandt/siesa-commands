@@ -133,7 +133,7 @@ class DataWrapperModel:
         main_output_folder = os.path.dirname(self.output_file_path)
         now = datetime.now()
         timestamp = now.strftime("%Y_%m_%d_%H_%M")
-        dir_name = f"output_{timestamp}"
+        dir_name = f"output"
         output_dir = os.path.join(main_output_folder, dir_name)
 
         os.makedirs(output_dir, exist_ok=True)

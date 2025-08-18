@@ -9,7 +9,7 @@ class AppConfig:
     ## Models to use in the analysis
     prepare_tables_tiktoken_model: str = LLMModelNames.TIKTOKEN_MODEL.value
     prepare_procedures_tiktoken_model: str = LLMModelNames.TIKTOKEN_MODEL.value
-    database_diagrams_llm_model: str = LLMModelNames.GEMINI_FLASH_MODEL.value
+    database_diagrams_llm_model: str = LLMModelNames.OPENAI_MODEL.value
     use_case_analysis_llm_model: str = LLMModelNames.GEMINI_PRO_MODEL.value
     backend_entities_llm_model: str = LLMModelNames.OPENAI_MODEL.value
     backend_business_llm_model: str = LLMModelNames.GEMINI_PRO_MODEL.value

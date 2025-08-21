@@ -11,6 +11,9 @@ from feature_analyzer.common.step_execution_interface import StepExecutionInterf
 from feature_analyzer.codegenerator.entities.db_context_code_generation_step_service import (
     DbContextCodeGenerationStepService,
 )
+from feature_analyzer.codegenerator.entities.entities_code_generation_from_diagram_step_service import (
+    EntitiesCodeGenerationFromDiagramStepService,
+)
 
 
 class CodeGenerationPhaseService(PhaseExecutionInterface):
@@ -18,9 +21,10 @@ class CodeGenerationPhaseService(PhaseExecutionInterface):
         self.logger = logging.getLogger(__name__)
 
     def execute(self, data_wrapper: DataWrapperModel) -> DataWrapperModel:
-        self.logger.info("Starting code generation process...")
+        self.logger.info("➡️ Starting code generation process...")
         code_generators: list[StepExecutionInterface] = [
-            EntitiesCodeGenerationStepService(),
+            # EntitiesCodeGenerationStepService(),
+            EntitiesCodeGenerationFromDiagramStepService(),
             DbContextCodeGenerationStepService(),
             BusinessCodeGenerationStepService(max_dependency_depth=0),
         ]
@@ -31,12 +35,12 @@ class CodeGenerationPhaseService(PhaseExecutionInterface):
             )
             data_wrapper = code_generator.execute(data_wrapper)
 
-        self.logger.info("Code generation process completed.")
+        self.logger.info("✅ Code generation process completed.")
 
         return data_wrapper
 
     def get_loading_log_message(self):
-        return "[Code Generation Phase] Executing..."
+        return "⚙️ [Code Generation Phase] Executing..."
 
     def get_finished_log_message(self):
-        return "[Code Generation Phase] Finished executing."
+        return "✅ [Code Generation Phase] Finished executing."

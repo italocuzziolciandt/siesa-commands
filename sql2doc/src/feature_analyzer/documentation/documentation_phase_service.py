@@ -17,7 +17,7 @@ class DocumentationPhaseService(PhaseExecutionInterface):
         self.logger = logging.getLogger(__name__)
 
     def execute(self, data_wrapper: DataWrapperModel) -> DataWrapperModel:
-        self.logger.info("Starting documentation generation process...")
+        self.logger.info("➡️ Starting documentation generation process...")
         doc_analyzers: list[StepExecutionInterface] = [
             DatabaseModelStepService(),
             UseCaseExtractionStepService(),
@@ -27,12 +27,12 @@ class DocumentationPhaseService(PhaseExecutionInterface):
             self.logger.info(f"Using doc generator step: {analyzer.__class__.__name__}")
             data_wrapper = analyzer.execute(data_wrapper)
 
-        self.logger.info("Documentation generation process completed.")
+        self.logger.info("✅ Documentation generation process completed.")
 
         return data_wrapper
 
     def get_loading_log_message(self):
-        return "[Documentation Phase] Executing..."
+        return "⚙️ [Documentation Phase] Executing..."
 
     def get_finished_log_message(self):
-        return "[Documentation Phase] Finished executing."
+        return "✅ [Documentation Phase] Finished executing."

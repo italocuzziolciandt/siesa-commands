@@ -40,6 +40,7 @@ class SequenceDiagramPrompt(AnalyzerPrompt):
         Important:
         - Don't provide any explanations or additional text outside the Mermaid diagrams.
         - Don't make assumptions about the business context that are not directly supported by the T-SQL code.
+        - Don't add markdown formatting to the diagram components, it is not supported and will break the diagram.
         """
 
     def get_messages(self) -> list[BaseMessage]:
@@ -76,13 +77,13 @@ class SequenceDiagramPrompt(AnalyzerPrompt):
             participant John
 
             rect rgb(191, 223, 255)
-            note right of Alice: Alice calls John.
-            Alice->>+John: Hello John, how are you?
-            rect rgb(200, 150, 255)
-            Alice->>+John: John, can you hear me?
-            John-->>-Alice: Hi Alice, I can hear you!
-            end
-            John-->>-Alice: I feel great!
+                note right of Alice: Alice calls John.
+                Alice->>+John: Hello John, how are you?
+                rect rgb(200, 150, 255)
+                    Alice->>+John: John, can you hear me?
+                    John-->>-Alice: Hi Alice, I can hear you!
+                end
+                John-->>-Alice: I feel great!
             end
             Alice ->>+ John: Did you want to go to the game tonight?
             John -->>- Alice: Yeah! See you there.    
@@ -101,11 +102,28 @@ class SequenceDiagramPrompt(AnalyzerPrompt):
             Alice->John: Hello John, how are you?
             Note over Alice,John: A typical interaction 
 
+        // Line Breaks
+        sequenceDiagram
+            Alice->John: Hello John,<br/>how are you?
+            Note over Alice,John: A typical interaction<br/>But now in two lines            
+
         // Activations
         sequenceDiagram
             Alice->>John: Hello John, how are you?
             activate John
-            John-->>Alice: Great!
-            deactivate John                                              
+                John-->>Alice: Great!
+            deactivate John
+
+        // Alt
+        sequenceDiagram
+            Alice->>Bob: Hello Bob, how are you?
+            alt is sick
+                Bob->>Alice: Not so good :(
+            else is well
+                Bob->>Alice: Feeling fresh like a daisy
+            end
+            opt Extra response
+                Bob->>Alice: Thanks for asking
+            end            
         ```
         """

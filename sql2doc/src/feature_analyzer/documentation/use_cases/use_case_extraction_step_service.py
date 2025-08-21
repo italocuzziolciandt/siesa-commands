@@ -38,9 +38,11 @@ class UseCaseExtractionStepService(StepExecutionInterface):
             self.use_case_consolidation_service.analyze(data_wrapper)
             self.use_case_diagrams_service.analyze(data_wrapper)
 
-            self.logger.info("Use Cases analysis process completed.")
+            self.logger.info("✅ Use Cases analysis process completed.")
 
         except Exception as error:
-            self.logger.error(f"Error on generating the use cases document: {error}.")
+            self.logger.error(
+                f"❌ Error on generating the use cases document: {error}."
+            )
 
         return data_wrapper

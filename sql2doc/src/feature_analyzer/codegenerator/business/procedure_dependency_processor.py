@@ -1,5 +1,7 @@
 import logging
-from feature_analyzer.codegenerator.business.business_code_generator_from_procedure import BusinessCodeGeneratorFromProcedure
+from feature_analyzer.codegenerator.business.business_code_generator_from_procedure import (
+    BusinessCodeGeneratorFromProcedure,
+)
 from feature_analyzer.models.code_result_model import ClassImplementation
 from typing import Optional
 from feature_analyzer.models.data_wrapper_model import DataWrapperModel
@@ -65,7 +67,7 @@ class ProcedureDependencyProcessor:
                 )
 
                 if not dependency_procedure:
-                    log_message = f"Warning: Procedure {dependency.procedure_name} not found in analysis results."
+                    log_message = f"⚠️ Warning: Procedure {dependency.procedure_name} not found in analysis results."
                     self.logger.warning(log_message)
                     continue  # Skip if the dependency procedure is not found
 

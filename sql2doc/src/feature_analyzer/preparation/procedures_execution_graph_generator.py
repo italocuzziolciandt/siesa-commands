@@ -89,7 +89,7 @@ class ProceduresExecutionGraphGenerator:
         )
 
         if not procedure:
-            self.logger.warning(f"Procedure not found: {procedure_name}")
+            self.logger.warning(f"⚠️ Procedure not found: {procedure_name}")
             return
 
         processed_procedures.add(procedure_name)
@@ -178,5 +178,5 @@ class ProceduresExecutionGraphGenerator:
             content = f"\n-- Content of table {table_name} --\n" + table.content + "\n"
             return content
         else:
-            self.logger.warning(f"Table not found: {table_name}")
+            self.logger.warning(f"⚠️ Table not found: {table_name}")
             return ""

@@ -38,14 +38,20 @@ class MapTablesContentStepService(StepExecutionInterface):
             DataWrapperModel: The updated DataWrapperModel with the extracted and prepared database tables.
         """
         try:
-            tables = self._extract_tables(data_wrapper.database_tables_content)
+            tables = self._extract_tables(
+                data_wrapper.database_tables_content,
+                data_wrapper.tables_new_name_convention,
+            )
             data_wrapper.output_tables_mapping = tables
+
         except Exception as error:
-            self.logger.error(f"Error on preparing the tables content: {error}.")
+            self.logger.error(f"❌ Error on preparing the tables content: {error}.")
 
         return data_wrapper
 
-    def _extract_tables(self, database_tables_content: str) -> list[DatabaseTableModel]:
+    def _extract_tables(
+        self, database_tables_content: str, new_name_convention_mapping: dict[str, str]
+    ) -> list[DatabaseTableModel]:
         """
         Extracts database tables from the given SQL content.
 
@@ -72,6 +78,7 @@ class MapTablesContentStepService(StepExecutionInterface):
                         name=table_name,
                         content=table_content,
                         tokens=tokens,
+                        new_name_convention=new_name_convention_mapping.get(table_name),
                     )
 
                     tables.append(table)

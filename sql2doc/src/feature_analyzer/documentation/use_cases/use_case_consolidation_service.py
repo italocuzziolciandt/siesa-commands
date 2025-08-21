@@ -24,7 +24,7 @@ class UseCaseConsolidationService(BaseUseCaseGeneratorService):
 
         except Exception as error:
             self.logger.error(
-                f"Error on generating the consolidated use cases document: {error}."
+                f"❌ Error on generating the consolidated use cases document: {error}."
             )
 
         return data_wrapper

@@ -1,4 +1,5 @@
 import logging
+import sys
 from prompter.base import ConfigAuthentication
 from generativeai.prompter_factory import LLMModelNames
 from phoenix.otel import register
@@ -18,9 +19,9 @@ class AppConfig:
     prepare_tables_tiktoken_model: str = LLMModelNames.TIKTOKEN_MODEL.value
     prepare_procedures_tiktoken_model: str = LLMModelNames.TIKTOKEN_MODEL.value
     database_diagrams_llm_model: str = LLMModelNames.OPENAI_MODEL.value
-    use_case_analysis_llm_model: str = LLMModelNames.GEMINI_PRO_MODEL.value
+    use_case_analysis_llm_model: str = LLMModelNames.GEMINI_FLASH_MODEL.value
     backend_entities_llm_model: str = LLMModelNames.OPENAI_MODEL.value
-    backend_business_llm_model: str = LLMModelNames.GEMINI_PRO_MODEL.value
+    backend_business_llm_model: str = LLMModelNames.GEMINI_FLASH_MODEL.value
 
     # General Configurations
     max_procedure_analysis_dependency_depth: int = -1
@@ -40,7 +41,9 @@ class AppConfig:
 
     def configure_logging(self) -> None:
         logging.basicConfig(
-            level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+            level=logging.INFO, 
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            stream=sys.stderr,
         )
 
     def __register_trace(self) -> OITracer:

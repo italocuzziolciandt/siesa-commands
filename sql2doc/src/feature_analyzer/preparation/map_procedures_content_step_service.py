@@ -67,6 +67,6 @@ class MapProceduresContentStepService(StepExecutionInterface):
             data_wrapper.output_procedure_analysis_result = procedure_content_mapping
 
         except Exception as error:
-            self.logger.error(f"Error on preparing the procedures content: {error}.")
+            self.logger.error(f"❌ Error on preparing the procedures content: {error}.")
 
         return data_wrapper

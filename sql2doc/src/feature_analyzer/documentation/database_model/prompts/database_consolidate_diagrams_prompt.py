@@ -98,7 +98,7 @@ class DatabaseConsolidateDiagramsPrompt(AnalyzerPrompt):
             SystemMessage(content=self.get_system_message()),
             HumanMessage(content=self.get_user_message()),
         ]
-    
+
     def __get_few_shots_examples(self) -> str:
         return """
         erDiagram
@@ -165,4 +165,4 @@ class DatabaseConsolidateDiagramsPrompt(AnalyzerPrompt):
             ORDER ||--|{ ORDER-ITEM : includes
             PRODUCT-CATEGORY ||--|{ PRODUCT : contains
             PRODUCT ||--o{ ORDER-ITEM : "ordered in"
-        """    
+        """

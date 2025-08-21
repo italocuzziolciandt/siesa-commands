@@ -37,7 +37,7 @@ class EntitiesCodeGenerationStepService(StepExecutionInterface):
                 return data_wrapper
 
             result_list = self._process_tables_content_in_parallel(
-                data_wrapper.output_tables_mapping
+                data_wrapper.output_tables_mapping, data_wrapper
             )
             data_wrapper.output_entities_analysis_result = result_list
 
@@ -47,18 +47,18 @@ class EntitiesCodeGenerationStepService(StepExecutionInterface):
 
             data_wrapper.output_entities_code_full_content = entities_full_content
         except Exception as error:
-            self.logger.error(f"Error on generating the entities classes: {error}.")
+            self.logger.error(f"❌ Error on generating the entities classes: {error}.")
 
         return data_wrapper
 
     def _process_tables_content_in_parallel(
-        self, tables_mapping: list[DatabaseTableModel]
+        self, tables_mapping: list[DatabaseTableModel], data_wrapper: DataWrapperModel
     ) -> list[LLMEntityClassResultModel]:
         result_list: list[LLMEntityClassResultModel] = []
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             futures = {
-                executor.submit(self._process_single_table, table): table
+                executor.submit(self._process_single_table, table, data_wrapper): table
                 for table in tables_mapping
             }
 
@@ -75,7 +75,7 @@ class EntitiesCodeGenerationStepService(StepExecutionInterface):
         return result_list
 
     def _process_single_table(
-        self, table: DatabaseTableModel
+        self, table: DatabaseTableModel, data_wrapper: DataWrapperModel
     ) -> LLMEntityClassResultModel:
         with app_config_instance.tracer.start_as_current_span(
             "EntitiesCodeGeneration",
@@ -94,13 +94,15 @@ class EntitiesCodeGenerationStepService(StepExecutionInterface):
                 prompt: AnalyzerPrompt = EntitiesFromTableContentPrompt(
                     table_name=table.name,
                     table_content=table.content,
+                    table_new_name_convention=table.new_name_convention,
+                    database_model_diagram=data_wrapper.output_database_model_full_content,
                 )
 
                 entity_code_result: LLMEntityClassResultModel = (
                     self.prompter.get_structured_output_from_llm(prompt.get_messages())
                 )
 
-                self.logger.info(f"Entity code generated for table: {table.name}")
+                self.logger.info(f"✅ Entity code generated for table: {table.name}")
 
                 span.set_output(entity_code_result.content)
                 span.set_status(Status(StatusCode.OK))

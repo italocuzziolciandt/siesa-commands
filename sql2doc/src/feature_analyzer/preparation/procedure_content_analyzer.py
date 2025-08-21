@@ -74,25 +74,26 @@ class ProcedureContentAnalyzer:
         return []
 
     def _extract_procedure_calls(self, content: str) -> list[str]:
-        """
-        Extracts the procedure calls from the content of the stored procedure.
+        # The robust regex from before remains unchanged.
+        exec_pattern = r"\b(EXEC|EXECUTE)\b\s+(?:@\w+\s*=\s*)?([\w\.]+)(?!\s*\()"
 
-        Args:
-            content (str): The content of the stored procedure.
+        matches = re.findall(exec_pattern, content, re.IGNORECASE)
 
-        Returns:
-            List[str]: A list of procedure calls found in the content.
-        """
-        exec_pattern = r"exec\s*(?:@\w+\s*=\s*)?(\w+\.\w+|\w+)"
-        set_pattern = r"set\s*@?\s*\w+\s*=\s*(\w+\.\w+)\s*\("
+        procedure_full_names = [match[1] for match in matches]
 
-        exec_calls = re.findall(exec_pattern, content, re.IGNORECASE)
-        set_calls = re.findall(set_pattern, content, re.IGNORECASE)
+        seen_procedures = set()
+        ordered_distinct_calls = []
 
-        calls = exec_calls + set_calls
-        distinct_calls = sorted(list(set(calls)))  # Sort after dedup for clarity
+        for name in procedure_full_names:
+            # The schema is stripped just like before.
+            procedure_name = name.split(".")[-1]
 
-        return distinct_calls
+            # Only add the procedure to our list if it's the first time we've seen it.
+            if procedure_name not in seen_procedures:
+                seen_procedures.add(procedure_name)
+                ordered_distinct_calls.append(procedure_name)
+
+        return ordered_distinct_calls
 
     def _extract_tables(self, content: str) -> list[TableReferenceModel]:
         """

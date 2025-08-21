@@ -24,12 +24,12 @@ class FeatureToggle:
             cls._instance = super(FeatureToggle, cls).__new__(cls)
             cls._instance._features = {
                 Feature.DATABASE_MODEL_GENERATION: True,
-                Feature.USE_CASE_DOC_FROM_PROCEDURE_GENERATION: True,
-                Feature.USE_CASE_DOC_FROM_APP_FILE_GENERATION: True,
-                Feature.USE_CASE_DOC_FLOW_DIAGRAM_GENERATION: True,
-                Feature.USE_CASE_DOC_SEQUENCE_DIAGRAM_GENERATION: True,
-                Feature.USE_CASE_DOC_FLOW_CONSOLIDATION: True,
-                Feature.BACKEND_ENTITIES_CODE_GENERATION: False,
+                Feature.USE_CASE_DOC_FROM_PROCEDURE_GENERATION: False,
+                Feature.USE_CASE_DOC_FROM_APP_FILE_GENERATION: False,
+                Feature.USE_CASE_DOC_FLOW_DIAGRAM_GENERATION: False,
+                Feature.USE_CASE_DOC_SEQUENCE_DIAGRAM_GENERATION: False,
+                Feature.USE_CASE_DOC_FLOW_CONSOLIDATION: False,
+                Feature.BACKEND_ENTITIES_CODE_GENERATION: True,
                 Feature.BACKEND_DBCONTEXT_CODE_GENERATION: False,
                 Feature.BACKEND_BUSINESS_CODE_GENERATION: False,
             }

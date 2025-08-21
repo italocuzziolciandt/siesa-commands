@@ -18,7 +18,7 @@ class PreparationPhaseService(PhaseExecutionInterface):
         self.logger = logging.getLogger(__name__)
 
     def execute(self, data_wrapper: DataWrapperModel) -> DataWrapperModel:
-        self.logger.info("Starting preparation process...")
+        self.logger.info("➡️ Starting preparation process...")
         preparation_steps: list[StepExecutionInterface] = [
             MapFilesStepService(),
             MapTablesContentStepService(),

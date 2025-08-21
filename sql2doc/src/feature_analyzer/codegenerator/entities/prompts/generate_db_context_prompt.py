@@ -3,11 +3,7 @@ from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 
 
 class GenerateDbContextPrompt(AnalyzerPrompt):
-    def __init__(
-        self,
-        entities_signatures: str,
-        database_model_diagram: str
-    ) -> None:
+    def __init__(self, entities_signatures: str, database_model_diagram: str) -> None:
         self.entities_signatures = entities_signatures
         self.database_model_diagram = database_model_diagram
 
@@ -41,11 +37,17 @@ class GenerateDbContextPrompt(AnalyzerPrompt):
             Here you have the base class definition to use as reference:
             {self.__get_base_classes_definitions()}
 
+            You should also map the relationship (OnModelCreating) between the entities considering the database model diagram below:
+            ```
+            {self.database_model_diagram}
+            ```
+
             Provide a **complete DbContext class implementation**, without summarizing or truncating the response. If the response exceeds the max output limit, continue generating until all entities are fully covered.
 
             After generating the DbContext, use the tool `write_class_content_to_file` to write the class content to a file.
 
             Important:
+            - Don't map the relationship between tables if there is no entity defined for them (use the signatures to identify).
             - Don't make assumptions, provide the full DbContext implementation of the class.
             - Don't add any additional comments or explanations, just provide the code implementation.
         """

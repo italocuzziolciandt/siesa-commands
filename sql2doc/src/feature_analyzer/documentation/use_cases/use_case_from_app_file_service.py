@@ -34,7 +34,7 @@ class UseCaseFromAppFileService(BaseUseCaseGeneratorService):
 
         except Exception as error:
             self.logger.error(
-                f"Error on generating the use cases from application files: {error}."
+                f"❌ Error on generating the use cases from application files: {error}."
             )
 
         return data_wrapper

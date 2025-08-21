@@ -3,8 +3,8 @@ from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 
 
 class DatabaseGenerateMermaidPrompt(AnalyzerPrompt):
-    def __init__(self, feature_database_full_content: str) -> None:
-        self.feature_database_full_content = feature_database_full_content
+    def __init__(self, procedure_content: str) -> None:
+        self.procedure_content = procedure_content
 
     def get_system_message(self) -> str:
         return """
@@ -43,9 +43,9 @@ class DatabaseGenerateMermaidPrompt(AnalyzerPrompt):
 
     def get_user_message(self) -> str:
         return f"""
-        Considering the SQL code below:
+        Considering the SQL Stored Procedure code below:
         ```markdown
-        {self.feature_database_full_content}
+        {self.procedure_content}
         ```
 
         Generate a Mermaid ER diagram representing the database structure used by this code. 

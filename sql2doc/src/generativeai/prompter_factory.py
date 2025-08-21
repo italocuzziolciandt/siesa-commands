@@ -7,6 +7,8 @@ from enum import Enum
 
 class LLMModelNames(Enum):
     OPENAI_MODEL: str = "gpt-4.1"
+    OPENAI_GTP5_MODEL: str = "gpt-5"
+    OPENAI_GTP5_MINI_MODEL: str = "gpt-5-mini"
     GEMINI_FLASH_MODEL: str = "gemini-2.0-flash"
     GEMINI_PRO_MODEL: str = "gemini-2.5-pro"
     TIKTOKEN_MODEL: str = "gpt-4o"

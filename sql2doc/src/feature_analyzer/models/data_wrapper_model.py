@@ -32,6 +32,7 @@ class DataWrapperModel:
     database_tables_content: str
     procedure_files_mapping: dict[str, str]
     use_tables_in_procedure_analysis: bool
+    tables_new_name_convention: dict[str, str]
 
     # --- Internal State & Services ---
     files_handler: FilesHandlerService
@@ -76,6 +77,8 @@ class DataWrapperModel:
         self._output_business_code_full_content: str = None
         self._output_sequence_diagram_full_content: str = None
         self._output_flow_diagram_full_content: str = None
+
+        self.tables_new_name_convention = self.__get_table_names_mapping()
 
     def _write_output_section(self, content: str, filename: str):
         """
@@ -158,3 +161,55 @@ class DataWrapperModel:
     def output_flow_diagram_full_content(self, value: str):
         self._output_flow_diagram_full_content = value
         self._write_output_section(value, "flow_diagram.md")
+
+    def __get_table_names_mapping(self) -> dict:
+        return {
+            "t021_mm_tipos_documentos": "e20120_document_type",
+            "t016_mm_bancos": "e20130_bank",
+            "t285_co_centro_op": "e20160_operation_center",
+            "t011_mm_paises": "e20200_country",
+            "t012_mm_deptos": "e20201_state",
+            "t013_mm_ciudades": "e20202_city",
+            "t284_co_ccosto": "e20233_cost_center_auxiliary",
+            "t279_co_grupos_ccostos": "e20235_cost_center_group",
+            "t107_mc_proyectos": "e20253_project_auxiliary",
+            "t024_mm_periodos": "e20271_fiscal_period",
+            "t053_mm_fechas": "e20272_fiscal_date",
+            "t281_co_unidades_negocio": "e20280_business_unit",
+            "w0763_gh01_cargos": "e20310_position",
+            "t203_mm_tipo_ident": "e20400_identification_type",
+            "t200_mm_terceros": "e20410_third_party",
+            "w0501_conceptos": "e77501_conceptos",
+            "w0502_agrupacion_conceptos": "e77502_agrupacion_conceptos",
+            "w0503_detalle_agrupac_cptos": "e77503_detalle_agrupac_cptos",
+            "w0504_tipos_nomina": "e77504_tipos_nomina",
+            "w0510_grupos_empleados": "e77510_grupos_empleados",
+            "w0511_detalle_grupo_empleados": "e77511_detalle_grupo_empleados",
+            "w0514_cod_nal_entidades": "e77514_cod_nal_entidades",
+            "w0515_entidades_eps": "e77515_entidades_eps",
+            "w0516_entidades_afp": "e77516_entidades_afp",
+            "w0517_entidades_arp": "e77517_entidades_arp",
+            "w0518_entidades_cajas": "e77518_entidades_cajas",
+            "w0519_entidades_sena": "e77519_entidades_sena",
+            "w0520_entidades_icbf": "e77520_entidades_icbf",
+            "w0521_entidades_fondos": "e77521_entidades_fondos",
+            "w0522_entidades_afc": "e77522_entidades_afc",
+            "w0530_centros_de_trabajo": "e77530_centros_de_trabajo",
+            "w0535_tipos_cotizante": "e77535_tipos_cotizante",
+            "w0540_empleados": "e77540_empleados",
+            "w0051_parametros_nomina_ano": "e77541_parametros_nomina_anio",
+            "w0050_parametros_nomina": "e77542_parametros_nomina",
+            "w0550_contratos": "e77550_contratos",
+            "w0555_motivos_retiro": "e77555_motivos_retiro",
+            "w0557_contratos_distr_salario": "e77557_contratos_distr_salario",
+            "w0558_contratos_sueldos_log": "e77558_contratos_sueldos_log",
+            "w0580_periodos_nomina": "e77580_periodos_nomina",
+            "w0581_periodos_nomina_detalle": "e77581_periodos_nomina_detalle",
+            "w0600_docto_nomina": "e77600_docto_nomina",
+            "w0601_docto_nomina_emp": "e77601_docto_nomina_emp",
+            "w0602_movto_nomina": "e77602_movto_nomina",
+            "w0610_tiempo_no_laborado": "e77610_tiempo_no_laborado",
+            "w0611_tiempo_no_labor_detalle": "e77611_tiempo_no_labor_detalle",
+            "w0618_ausentismos": "e77618_ausentismos",
+            "w0643_autoliquid_sucursales": "e77643_autoliquid_sucursales",
+        }

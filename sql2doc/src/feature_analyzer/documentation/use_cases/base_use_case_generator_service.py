@@ -36,4 +36,4 @@ class BaseUseCaseGeneratorService(ABC):
                     future.result()
                 except Exception as e:
                     item = futures[future]  # Recover item in case of error.
-                    self.logger.error(f"Error processing item: {item}. Error: {e}")
+                    self.logger.error(f"❌ Error processing item: {item}. Error: {e}")

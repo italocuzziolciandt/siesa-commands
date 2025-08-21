@@ -28,7 +28,7 @@ class MapFilesStepService(StepExecutionInterface):
             )
 
         except Exception as error:
-            self.logger.error(f"Error on preparing the tables content: {error}.")
+            self.logger.error(f"❌ Error on preparing the tables content: {error}.")
 
         return data_wrapper
 

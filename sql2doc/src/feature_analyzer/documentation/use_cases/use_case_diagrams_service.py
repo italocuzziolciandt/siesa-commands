@@ -38,7 +38,9 @@ class UseCaseDiagramsService(BaseUseCaseGeneratorService):
                 future_flow_diagram.result()
 
         except Exception as error:
-            self.logger.error(f"Error on generating the use cases diagrams: {error}.")
+            self.logger.error(
+                f"❌ Error on generating the use cases diagrams: {error}."
+            )
 
         return data_wrapper
 

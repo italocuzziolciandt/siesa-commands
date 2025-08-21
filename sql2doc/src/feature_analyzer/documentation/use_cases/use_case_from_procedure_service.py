@@ -34,7 +34,7 @@ class UseCaseFromProcedureService(BaseUseCaseGeneratorService):
 
         except Exception as error:
             self.logger.error(
-                f"Error on generating the use cases from procedure: {error}."
+                f"❌ Error on generating the use cases from procedure: {error}."
             )
 
         return data_wrapper

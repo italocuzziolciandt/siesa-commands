@@ -32,28 +32,34 @@ class DbContextCodeGenerationStepService(StepExecutionInterface):
                 return data_wrapper
 
             entities_signature = self.__get_entities_signatures(data_wrapper)
-            dbcontext_full_content = self.__generate_dbcontext(entities_signature, data_wrapper.output_database_model_full_content)
+            dbcontext_full_content = self.__generate_dbcontext(
+                entities_signature, data_wrapper.output_database_model_full_content
+            )
 
             data_wrapper.output_dbcontext_code_full_content = dbcontext_full_content
         except Exception as error:
-            self.logger.error(f"Error on generating the DbContext class: {error}.")
+            self.logger.error(f"❌ Error on generating the DbContext class: {error}.")
 
         return data_wrapper
 
-    def __generate_dbcontext(self, entities_signature: str, database_model_diagram: str) -> str:
+    def __generate_dbcontext(
+        self, entities_signature: str, database_model_diagram: str
+    ) -> str:
         with app_config_instance.tracer.start_as_current_span(
             "DbContextCodeGeneration",
             openinference_span_kind="chain",
         ) as span:
             try:
-                span.set_input(value={
-                    "entities_signature": entities_signature,
-                    "database_model_diagram": database_model_diagram
-                })
+                span.set_input(
+                    value={
+                        "entities_signature": entities_signature,
+                        "database_model_diagram": database_model_diagram,
+                    }
+                )
 
                 prompt = GenerateDbContextPrompt(
                     entities_signatures=entities_signature,
-                    database_model_diagram=database_model_diagram
+                    database_model_diagram=database_model_diagram,
                 )
 
                 dbcontext_full_content = (

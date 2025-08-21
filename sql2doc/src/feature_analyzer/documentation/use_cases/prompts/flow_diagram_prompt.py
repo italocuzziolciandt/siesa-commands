@@ -40,6 +40,9 @@ class FlowDiagramPrompt(AnalyzerPrompt):
         Important:
         - Don't provide any explanations or additional text outside the Mermaid diagrams.
         - Don't make assumptions about the business context that are not directly supported by the T-SQL code.
+        - Don't add markdown formatting to the diagram components, it is not supported and will break the diagram.
+        - Don't add double quotes in part of the description like `accion_inicial[1. Seleccionar Documento <br> y Clic en "Procesar"]`, it is invalid. Use single quote instead like `accion_inicial[1. Seleccionar Documento <br> y Clic en 'Procesar']`.
+        - Don't add parentheses in part of the description without double quotes like `notificacion[Actualizar Interfaz (Monitor)]`, it is invalid. Use `notificacion["Actualizar Interfaz (Monitor)"]` instead.
         """
 
     def get_messages(self) -> list[BaseMessage]:
@@ -47,7 +50,7 @@ class FlowDiagramPrompt(AnalyzerPrompt):
             SystemMessage(content=self.get_system_message()),
             HumanMessage(content=self.get_user_message()),
         ]
-    
+
     def _get_few_shot_examples(self) -> str:
         return """"
         ```mermaid

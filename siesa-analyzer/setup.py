@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="sql2doc",
+    name="siesa-analyzer",
     version="1.0.0",
     author="CI&T Flow",
     description="Gerador de documentações.",
@@ -22,7 +22,7 @@ setup(
     python_requires=">=3.11",
     entry_points={
         "console_scripts": [
-            "sql2doc=cli:main",
+            "siesa-analyzer=cli:main",
         ],
     },
 )

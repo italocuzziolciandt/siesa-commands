@@ -14,3 +14,8 @@ retry
 markdown
 WeasyPrint
 numpy<2
+arize-phoenix
+arize-phoenix-otel
+arize-phoenix-evals>=0.20.6
+openai>=1.0.0
+openinference-instrumentation-langchain

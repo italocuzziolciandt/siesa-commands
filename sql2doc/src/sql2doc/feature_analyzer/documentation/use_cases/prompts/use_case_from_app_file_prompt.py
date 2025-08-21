@@ -1,6 +1,6 @@
-from sql2doc.feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
+from feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
-from sql2doc.feature_analyzer.documentation.use_cases.prompts.use_case_document_template import (
+from feature_analyzer.documentation.use_cases.prompts.use_case_document_template import (
     use_case_document_template,
 )
 
@@ -40,7 +40,7 @@ class UseCasesFromApplicationFilePrompt(AnalyzerPrompt):
 
     def get_user_message(self) -> str:
         return f"""
-        Analyze the following application file and generate a detailed Use Case document based on the template. Focus on identifying the core business function it performs, the actors involved (either directly or indirectly), the preconditions required for successful execution, the expected outcomes (success and failure), and the steps involved in both the main success scenario and any relevant alternative flows. Pay close attention to any performance, security, or data integrity considerations that should be highlighted as special requirements.
+        Analyze the following application file and generate a detailed Use Case document based on the template. Focus on identifying the core business function it performs, the actors involved (either directly or indirectly), the expected outcomes (success and failure), and the steps involved in both the main success scenario and any relevant alternative flows. Pay close attention to any performance, security, or data integrity considerations that should be highlighted as special requirements.
 
         **Application File:**
         ```sql
@@ -63,6 +63,7 @@ class UseCasesFromApplicationFilePrompt(AnalyzerPrompt):
         - Replace the [ ... ] placeholders in the template with the appropriate details derived from the application file.
         - Focus on the business logic implied by the code, not just the technical implementation.
         - Provide clear and concise descriptions for each section of the use case document.
+        - If a Business Rule describes a calculation (e.g., sums, multiplications, applying a percentage), you MUST also represent it as a mathematical formula in the Fórmula (si aplica): field. Use variable names from the code or descriptive names that represent the business concepts.        
         - Don't provide any explanations or additional text outside the Mermaid diagrams.
         - Don't make assumptions about the business context that are not directly supported by the application file.
         """

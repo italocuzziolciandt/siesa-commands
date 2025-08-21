@@ -1,4 +1,4 @@
-from sql2doc.feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
+from feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 
 
@@ -18,12 +18,14 @@ class ConsolidatesUseCasesPrompt(AnalyzerPrompt):
         *   **Use Case Harmonization:**  Instead of aggressively merging, focus on harmonizing use cases extracted from different legacy systems.  This means identifying commonalities and differences and creating a unified description that incorporates all relevant details.
         *   **Information Preservation:**  Prioritize preserving unique details from each source system.  When combining use cases, clearly attribute information to its original source (e.g., "This behavior is observed in the backend procedure...").
         *   **Scenario Modeling:** Develop detailed scenarios for each use case, outlining the main success scenario and alternative flows, including potential error conditions and exceptions.
-        *   **Documentation:** Create well-structured and comprehensive use case documents that include clear descriptions of actors, preconditions, postconditions, workflows, and special requirements, ensuring consistency and clarity.
+        *   **Documentation:** Create well-structured and comprehensive use case documents that include clear descriptions of actors, workflows, and special requirements, ensuring consistency and clarity.
         *   **Stakeholder Collaboration:** Collaborate with business stakeholders, developers, and testers to validate and refine use case documents, ensuring they accurately reflect business needs and are technically feasible.
         *   **Requirements Management:** Maintain traceability between use cases and other requirements artifacts, ensuring that all requirements are properly addressed throughout the software development lifecycle.
         *   **Clarity and Conciseness:** Prioritize clear and concise communication in all use case documentation, avoiding technical jargon and using language that is easily understood by both technical and non-technical audiences.
         *   **Legacy System Awareness:**  Recognize that variations in use cases from different legacy systems may represent subtle but important differences in business logic or user experience.  Avoid discarding these differences unless they are definitively proven to be redundant.         
-            """
+
+        Use Spanish to generate the content.
+        """
 
     def get_user_message(self) -> str:
         return f"""

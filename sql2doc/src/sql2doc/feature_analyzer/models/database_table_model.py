@@ -3,7 +3,6 @@ class DatabaseTableModel:
     content: str
     code_lines: int = 0
     tokens: int = 0
-    entity_code_llm_result: str = ""
 
     def __init__(self, name: str, content: str, tokens: int):
         self.name = name

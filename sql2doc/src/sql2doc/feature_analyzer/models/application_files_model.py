@@ -8,3 +8,4 @@ class ApplicationFileModel:
         self.file_name = file_name
         self.file_content = file_content
         self.method_names = method_names
+        self.llm_use_cases_documentation = None

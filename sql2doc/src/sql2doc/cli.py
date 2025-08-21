@@ -1,7 +1,8 @@
 import click
 from prompter.base import ConfigAuthentication
 from contrib.utilities.helpers import load_config_auth
-# Deferred import to avoid deep module loading on help
+from feature_analyzer.analyzer_service import AnalyzerService
+from common.app_config import app_config_instance
 
 
 def validate_comma_separated_list(ctx, param, value):
@@ -76,10 +77,12 @@ def main(
         procedures_dir_path: Directory path containing procedure files.
         output_file_path: Path to the output file.
     """
+    app_config_instance.configure_logging()
+
     config = load_config_auth(config=config_auth)
     configuration = ConfigAuthentication(**config)
-    # Lazy import to avoid loading feature_analyzer modules on help
-    from .feature_analyzer.analyzer_service import AnalyzerService
+
+    # Initialize the AnalyzerService with the authentication configuration
     analyzer_service = AnalyzerService(config_auth=configuration)
 
     # Analyze the feature using the provided file paths and configurations

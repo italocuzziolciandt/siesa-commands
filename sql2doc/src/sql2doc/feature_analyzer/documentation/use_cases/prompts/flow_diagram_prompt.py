@@ -1,4 +1,4 @@
-from sql2doc.feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
+from feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 
 
@@ -17,7 +17,7 @@ class FlowDiagramPrompt(AnalyzerPrompt):
         -   **Requirements Elicitation:** Conduct interviews, workshops, and other elicitation techniques to gather detailed information about user goals, system functionality, and business processes.
         -   **Use Case Identification:** Identify and define distinct use cases based on the collected requirements, focusing on the interactions between actors and the system to achieve specific goals.
         -   **Scenario Modeling:** Develop detailed scenarios for each use case, outlining the main success scenario and alternative flows, including potential error conditions and exceptions.
-        -   **Documentation:** Create well-structured and comprehensive use case documents that include clear descriptions of actors, preconditions, postconditions, workflows, and special requirements, ensuring consistency and clarity.
+        -   **Documentation:** Create well-structured and comprehensive use case documents that include clear descriptions of actors, workflows, and special requirements, ensuring consistency and clarity.
         -   **Stakeholder Collaboration:** Collaborate with business stakeholders, developers, and testers to validate and refine use case documents, ensuring they accurately reflect business needs and are technically feasible.
         -   **Requirements Management:** Maintain traceability between use cases and other requirements artifacts, ensuring that all requirements are properly addressed throughout the software development lifecycle.
         -   **Clarity and Conciseness:** Prioritize clear and concise communication in all use case documentation, avoiding technical jargon and using language that is easily understood by both technical and non-technical audiences.
@@ -34,18 +34,8 @@ class FlowDiagramPrompt(AnalyzerPrompt):
             {self.use_cases_content}
         ```
 
-        Here a simple example of a flow diagram:
-        ```mermaid
-            ---
-            config:
-                theme: redux
-            ---
-            flowchart TD
-                    A(["Start"])
-                    A --> B{"Decision"}
-                    B --> C["Option A"]
-                    B --> D["Option B"]
-        ```
+        Here we have some examples of a flow diagram:
+        {self._get_few_shot_examples()}
 
         Important:
         - Don't provide any explanations or additional text outside the Mermaid diagrams.
@@ -57,3 +47,52 @@ class FlowDiagramPrompt(AnalyzerPrompt):
             SystemMessage(content=self.get_system_message()),
             HumanMessage(content=self.get_user_message()),
         ]
+    
+    def _get_few_shot_examples(self) -> str:
+        return """"
+        ```mermaid
+        ---
+        config:
+            theme: redux
+        ---
+        flowchart TD
+            A(["Start"])
+            A --> B{"Decision"}
+            B --> C["Option A"]
+            B --> D["Option B"]
+
+        flowchart TD
+            A[Start] --> B{Is it?}
+            B -->|Yes| C[OK]
+            C --> D[Rethink]
+            D --> B
+            B ---->|No| E[End]  
+
+        flowchart TB
+            c1-->a2
+            subgraph one
+            a1-->a2
+            end
+            subgraph two
+            b1-->b2
+            end
+            subgraph three
+            c1-->c2
+            end
+
+        flowchart LR
+            subgraph TOP
+                direction TB
+                subgraph B1
+                    direction RL
+                    i1 -->f1
+                end
+                subgraph B2
+                    direction BT
+                    i2 -->f2
+                end
+            end
+            A --> TOP --> B
+            B1 --> B2            
+        ```
+        """

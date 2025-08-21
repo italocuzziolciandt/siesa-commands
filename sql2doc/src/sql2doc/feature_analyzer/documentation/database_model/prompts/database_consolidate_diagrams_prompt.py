@@ -1,4 +1,4 @@
-from sql2doc.feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
+from feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 
 
@@ -11,63 +11,86 @@ class DatabaseConsolidateDiagramsPrompt(AnalyzerPrompt):
         You are a Database Architect specializing in reverse-engineering database schemas from SQL code. Your objective is to analyze multiple Mermaid ER diagrams representing database structures extracted from SQL stored procedures and consolidate them into a single, comprehensive diagram. You pay close attention to detail and prioritize accuracy and completeness.
 
         Your Role:
-
-        *   **Diagram Analysis:** Analyze individual Mermaid ER diagrams to identify tables, columns, and relationships.
-        *   **Duplicate Detection:** Identify and resolve duplicate tables and relationships across multiple diagrams.
-        *   **Schema Consolidation:** Combine individual diagrams into a single, unified diagram, ensuring that all tables and relationships are accurately represented.
-        *   **Detail Preservation:** Preserve all relevant details about tables and columns, including data types, sizes, and relationships.
-        *   **Clarity and Conciseness:** Create clear and concise diagrams that are easy to understand and maintain.
-        *   **SQL Awareness:** Understand SQL syntax and semantics to accurately interpret table and relationship definitions.
+        **Diagram Analysis:** Analyze individual Mermaid ER diagrams to identify tables, columns, and relationships.
+        **Duplicate Detection:** Identify and resolve duplicate tables and relationships across multiple diagrams.
+        **Schema Consolidation:** Combine individual diagrams into a single, unified diagram, ensuring that all tables and relationships are accurately represented.
+        **Detail Preservation:** Preserve all relevant details about tables and columns, including data types, sizes, and relationships.
+        **Clarity and Conciseness:** Create clear and concise diagrams that are easy to understand and maintain.
+        **SQL Awareness:** Understand SQL syntax and semantics to accurately interpret table and relationship definitions.
 
         Prioritize:
-
-        *   **Accuracy:** Ensure that the consolidated diagram accurately reflects the database structure represented in the individual diagrams.
-        *   **Completeness:** Include all tables, columns, and relationships that are present in the individual diagrams.
-        *   **Clarity:** Create a diagram that is easy to understand and navigate.
+        **Accuracy:** Ensure that the consolidated diagram accurately reflects the database structure represented in the individual diagrams.
+        **Completeness:** Include all tables, columns, and relationships that are present in the individual diagrams.
+        **Clarity:** Create a diagram that is easy to understand and navigate.
 
         Ignore:
+        - Performance optimizations
+        - Code style details
 
-        *   Performance optimizations
-        *   Code style details
+        Mermaid syntax for ER diagrams is compatible with PlantUML, with an extension to label the relationship. 
+        Each statement consists of the following parts:
+        ```<first-entity> [<relationship> <second-entity> : <relationship-label>]```
 
-        Use this syntax below to represent the relationships:
-        Value (left)	Value (right)	Meaning
-        |o	o|	Zero or one
-        ||	||	Exactly one
-        }o	o{	Zero or more (no upper limit)
-        }|	|{	One or more (no upper limit)        
+        Where:
+        - first-entity is the name of an entity. Names support any unicode characters and can include spaces if surrounded by double quotes (e.g. "name with space").
+        - relationship describes the way that both entities inter-relate. See below.
+        - second-entity is the name of the other entity.
+        - relationship-label describes the relationship from the perspective of the first entity.
+
+        For example:
+        ```PROPERTY ||--|{ ROOM : contains```
         """
 
     def get_user_message(self) -> str:
-        return f"""
-        Below we have a content that has many database mermaid diagrams representations. They were extracted from a SQL Stored Procedures analysis. This analysis was made for each procedure individually, so the diagrams may have some duplicated tables and relationships.
+        return f""""
+        Below is a collection of Mermaid ER diagrams extracted from the analysis of individual SQL Stored Procedures. Because the analysis was done procedure-by-procedure, many tables and relationships are duplicated across the diagrams.
 
         **Mermaid Diagrams:**
         ```markdown
         {self.feature_database_full_content}
-        ```
 
-        Consolidate the provided Mermaid ER diagrams into a single, comprehensive diagram that represents the overall database structure. 
-        
-        Follow these steps:
-        **Extract Table Definitions:** For each Mermaid diagram, extract the table definitions, including table names, column names, and column data types (including precision/scale). Preserve the precision/scale information (e.g., DECIMAL(10-2), VARCHAR(255)). Use - instead of , to separate precision and scale.
-        
-        **Handle Duplicate Tables:**
-        - If a table appears in multiple diagrams, merge its column definitions.
-        - If the same column exists in multiple diagrams with different data types, use the data type that is the most specific one.
-        - Include all columns used in SELECT, UPDATE, DELETE, JOIN, INSERT, or WHERE clauses.
-        
-        **Extract Relationships:** For each Mermaid diagram, extract the relationships between tables. Represent the relationship by a simple connection between the two tables. Do not include specific join conditions or WHERE clause criteria in the diagram.
-        
-        **Handle Duplicate Relationships:**
-        - If the same relationship appears in multiple diagrams, represent it only once in the consolidated diagram.
-        - If the relationship looks similar but the tables have some other relationships, represent both of them.
-        
-        **Generate Consolidated Diagram:** Create a single Mermaid ER diagram that includes all tables, columns, and relationships from the individual diagrams, with duplicates resolved as described above.
+        Your task is to consolidate the provided Mermaid ER diagrams into a single, comprehensive diagram that represents the overall database structure accurately and cleanly.
 
-        - Do not include temporary tables.
-        - Follow the specified format for data types (e.g., TYPE(PRECISION-SCALE)).
-        - Do not provide any comments, explanations, or additional information outside the Mermaid diagram.
+        Follow these steps meticulously:
+        1. Extract Table Definitions
+        - From each Mermaid diagram, extract all table definitions, including table names, column names, and their data types.
+        - Crucially, preserve the precision and scale for data types like DECIMAL or VARCHAR. Use a hyphen to separate precision and scale as specified (e.g., DECIMAL(10-2), VARCHAR(255)).
+
+        2. Handle Duplicate Tables
+        - If a table appears in multiple diagrams, merge its column definitions into a single entity.
+        - If the same column appears with different data types, choose the most specific or largest type to ensure compatibility (e.g., prefer VARCHAR(100) over VARCHAR(50)).
+        - The final table definition should include every unique column found across all diagrams for that table.
+
+        3. Unify and Consolidate Relationships
+        - The primary goal is to represent only one relationship for any given pair of tables, even if they are linked with different labels in the source diagrams.
+        - Identify all unique pairs of connected tables (e.g., TableA and TableB).
+        - For each pair, gather all the different relationship labels found in the source diagrams (e.g., "references", "created_by", "has_type").
+
+        Synthesize these labels into a single, generic, and descriptive name that best captures the essence of the connection. Avoid overly specific labels from a single context.
+
+        Represent this unified relationship only once in the final diagram.
+
+        Example of Consolidation:
+        - If you find the following relationships between w0550_contratos and w0510_grupos_empleados:
+        w0550_contratos ||--o{{ w0510_grupos_empleados : belongs_to
+        w0550_contratos ||--o{{ w0510_grupos_empleados : has
+        w0550_contratos ||--o{{ w0510_grupos_empleados : relates
+
+        You must consolidate them into a single relationship with a generic label. A good choice would be relates_to or has_group. The final output should be just one line:
+        w0550_contratos ||--o{{ w0510_grupos_empleados : relates_to
+
+        4. Generate Consolidated Diagram
+        Create a single Mermaid ER diagram that includes all unique tables with their complete column sets and the unified relationships.
+
+        Ensure the output is only the final, clean Mermaid code block.
+
+        Here are some examples of the expected output format:
+        {self.__get_few_shots_examples()}
+
+        Constraints:
+        - Do not include temporary tables (e.g., tables starting with # or @).
+        - Strictly follow the specified format for data types: TYPE(PRECISION-SCALE).
+        - The output must consist **only** of the complete erDiagramcode block. Do not add any comments (e.g.,-- Relationships), explanations, or introductory text, either inside or outside the diagram code.
         """
 
     def get_messages(self) -> list[BaseMessage]:
@@ -75,3 +98,71 @@ class DatabaseConsolidateDiagramsPrompt(AnalyzerPrompt):
             SystemMessage(content=self.get_system_message()),
             HumanMessage(content=self.get_user_message()),
         ]
+    
+    def __get_few_shots_examples(self) -> str:
+        return """
+        erDiagram
+            CAR ||--o{ NAMED-DRIVER : allows
+            CAR {
+                string registrationNumber PK
+                string make
+                string model
+                string[] parts
+            }
+            PERSON ||--o{ NAMED-DRIVER : is
+            PERSON {
+                string driversLicense PK "The license #"
+                string(99) firstName "Only 99 characters are allowed"
+                string lastName
+                string phone UK
+                int age
+            }
+            NAMED-DRIVER {
+                string carRegistrationNumber PK, FK
+                string driverLicence PK, FK
+            }
+            MANUFACTURER only one to zero or more CAR : makes   
+        ----
+        erDiagram
+            direction LR
+            CUSTOMER ||--o{ ORDER : places
+            CUSTOMER {
+                string name
+                string custNumber
+                string sector
+            }
+            ORDER ||--|{ LINE-ITEM : contains
+            ORDER {
+                int orderNumber
+                string deliveryAddress
+            }
+            LINE-ITEM {
+                string productCode
+                int quantity
+                float pricePerUnit
+            }
+        ----
+        erDiagram
+            CAR {
+                string registrationNumber
+                string make
+                string model
+            }
+            PERSON {
+                string firstName
+                string lastName
+                int age
+            }
+            PERSON:::foo ||--|| CAR : owns
+            PERSON o{--|| HOUSE:::bar : has
+        ----
+        erDiagram
+            CUSTOMER }|..|{ DELIVERY-ADDRESS : has
+            CUSTOMER ||--o{ ORDER : places
+            CUSTOMER ||--o{ INVOICE : "liable for"
+            DELIVERY-ADDRESS ||--o{ ORDER : receives
+            INVOICE ||--|{ ORDER : covers
+            ORDER ||--|{ ORDER-ITEM : includes
+            PRODUCT-CATEGORY ||--|{ PRODUCT : contains
+            PRODUCT ||--o{ ORDER-ITEM : "ordered in"
+        """    

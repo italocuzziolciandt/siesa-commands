@@ -2,18 +2,15 @@ from retry import retry
 from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage, AnyMessage
 from langchain.chat_models.base import BaseChatModel
 from pydantic import BaseModel
-from .prompter_interface import PrompterInterface
+from generativeai.prompter_interface import PrompterInterface
 from langgraph.prebuilt import create_react_agent
-from .prompter_agent_tools import (
+from generativeai.prompter_agent_tools import (
     write_partial_result,
-    print_generated_code_context_description,
     log_step,
+    write_class_content_to_file,
 )
 from typing import Any, Callable, Union, Dict
 from collections.abc import Sequence
-
-# from langchain_core.output_parsers.base import OutputParserLike
-# from langchain_core.runnables import Runnable, RunnableConfig
 from langchain_core.tools import BaseTool
 from prompter.base import ConfigAuthentication
 
@@ -30,11 +27,7 @@ class BasePrompter(PrompterInterface):
         if self.use_agent:
             self.agent = create_react_agent(
                 model=self.model_instance,
-                tools=[
-                    write_partial_result,
-                    print_generated_code_context_description,
-                    log_step,
-                ],
+                tools=[write_partial_result, log_step, write_class_content_to_file],
                 debug=False,
             )
 
@@ -114,11 +107,7 @@ class BasePrompter(PrompterInterface):
         if self.use_agent:
             self.agent = create_react_agent(
                 model=self.model_instance,
-                tools=[
-                    write_partial_result,
-                    print_generated_code_context_description,
-                    log_step,
-                ],
+                tools=[write_partial_result, log_step, write_class_content_to_file],
                 debug=False,
                 response_format=structured_output_class,
             )

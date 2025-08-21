@@ -2,6 +2,8 @@ import json
 
 
 class TableReferenceModel:
+    """Represents a reference to a table in a stored procedure."""
+
     table_name: str
     type: str  # e.g., "SELECT", "INSERT", "UPDATE", "DELETE"
 
@@ -14,13 +16,17 @@ class TableReferenceModel:
 
 
 class ProcedureModel:
+    """Represents a stored procedure file with its content."""
+
     procedure_name: str
     content: str
-    parameters: list[str]
+    parameters: list[str]  # Not implemented yet
     calls: list[str]
     code_lines: int = 0
     tokens: int = 0
-    tables: list[TableReferenceModel]
+    tables: list[
+        TableReferenceModel
+    ]  ## List of tables used in the procedure (extracted using regex)
     table_names: list[str]
 
     def __init__(

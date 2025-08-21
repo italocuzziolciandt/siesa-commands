@@ -1,21 +1,15 @@
 import logging
 from pydantic import BaseModel
-from sql2doc.feature_analyzer.codegenerator.prompts import (
+from feature_analyzer.codegenerator.business.prompts import (
     CSharpSDKBusinessFromProcedurePrompt,
 )
-from sql2doc.feature_analyzer.codegenerator.prompts.csharp_sdk_business_from_procedure_agent_prompt import (
+from feature_analyzer.codegenerator.business.prompts.csharp_sdk_business_from_procedure_agent_prompt import (
     CSharpSDKBusinessFromProcedureAgentPrompt,
 )
-from sql2doc.feature_analyzer.models.procedure_analysis_result_model import (
+from feature_analyzer.models.procedure_analysis_result_model import (
     ProcedureAnalysisResultModel,
 )
-from sql2doc.generativeai.prompter_interface import PrompterInterface
-
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from generativeai.prompter_interface import PrompterInterface
 
 
 class BusinessCodeGeneratorFromProcedure:

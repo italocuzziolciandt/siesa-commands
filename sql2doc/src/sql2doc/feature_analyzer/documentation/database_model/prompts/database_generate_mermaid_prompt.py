@@ -1,4 +1,4 @@
-from sql2doc.feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
+from feature_analyzer.prompts.analyzer_prompt_interface import AnalyzerPrompt
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 
 
@@ -11,31 +11,34 @@ class DatabaseGenerateMermaidPrompt(AnalyzerPrompt):
         You are a Database Architect specializing in reverse-engineering database schemas from SQL code. Your objective is to analyze multiple Mermaid ER diagrams representing database structures extracted from SQL stored procedures and consolidate them into a single, comprehensive diagram. You pay close attention to detail and prioritize accuracy and completeness.
 
         Your Role:
-
-        *   **Diagram Analysis:** Analyze individual Mermaid ER diagrams to identify tables, columns, and relationships.
-        *   **Duplicate Detection:** Identify and resolve duplicate tables and relationships across multiple diagrams.
-        *   **Schema Consolidation:** Combine individual diagrams into a single, unified diagram, ensuring that all tables and relationships are accurately represented.
-        *   **Detail Preservation:** Preserve all relevant details about tables and columns, including data types, sizes, and relationships.
-        *   **Clarity and Conciseness:** Create clear and concise diagrams that are easy to understand and maintain.
-        *   **SQL Awareness:** Understand SQL syntax and semantics to accurately interpret table and relationship definitions.
+        **Diagram Analysis:** Analyze individual Mermaid ER diagrams to identify tables, columns, and relationships.
+        **Duplicate Detection:** Identify and resolve duplicate tables and relationships across multiple diagrams.
+        **Schema Consolidation:** Combine individual diagrams into a single, unified diagram, ensuring that all tables and relationships are accurately represented.
+        **Detail Preservation:** Preserve all relevant details about tables and columns, including data types, sizes, and relationships.
+        **Clarity and Conciseness:** Create clear and concise diagrams that are easy to understand and maintain.
+        **SQL Awareness:** Understand SQL syntax and semantics to accurately interpret table and relationship definitions.
 
         Prioritize:
-
-        *   **Accuracy:** Ensure that the consolidated diagram accurately reflects the database structure represented in the individual diagrams.
-        *   **Completeness:** Include all tables, columns, and relationships that are present in the individual diagrams.
-        *   **Clarity:** Create a diagram that is easy to understand and navigate.
+        **Accuracy:** Ensure that the consolidated diagram accurately reflects the database structure represented in the individual diagrams.
+        **Completeness:** Include all tables, columns, and relationships that are present in the individual diagrams.
+        **Clarity:** Create a diagram that is easy to understand and navigate.
 
         Ignore:
+        - Performance optimizations
+        - Code style details
 
-        *   Performance optimizations
-        *   Code style details
+        Mermaid syntax for ER diagrams is compatible with PlantUML, with an extension to label the relationship. 
+        Each statement consists of the following parts:
+        ```<first-entity> [<relationship> <second-entity> : <relationship-label>]```
 
-        Use this syntax below to represent the relationships:
-        Value (left)	Value (right)	Meaning
-        |o	o|	Zero or one
-        ||	||	Exactly one
-        }o	o{	Zero or more (no upper limit)
-        }|	|{	One or more (no upper limit)        
+        Where:
+        - first-entity is the name of an entity. Names support any unicode characters and can include spaces if surrounded by double quotes (e.g. "name with space").
+        - relationship describes the way that both entities inter-relate. See below.
+        - second-entity is the name of the other entity.
+        - relationship-label describes the relationship from the perspective of the first entity.
+
+        For example:
+        ```PROPERTY ||--|{ ROOM : contains```     
         """
 
     def get_user_message(self) -> str:
@@ -46,7 +49,10 @@ class DatabaseGenerateMermaidPrompt(AnalyzerPrompt):
         ```
 
         Generate a Mermaid ER diagram representing the database structure used by this code. 
-        
+
+        Here you have some examples on how to represent the database structure:
+        {self.__get_few_shots_examples()}
+
         Follow these guidelines:
         **Table Inclusion:** Include all tables used in the following SQL clauses: SELECT, UPDATE, DELETE, JOIN, INSERT, and WHERE. Do not include temporary tables.
 
@@ -66,3 +72,71 @@ class DatabaseGenerateMermaidPrompt(AnalyzerPrompt):
             SystemMessage(content=self.get_system_message()),
             HumanMessage(content=self.get_user_message()),
         ]
+
+    def __get_few_shots_examples(self) -> str:
+        return """
+        erDiagram
+            CAR ||--o{ NAMED-DRIVER : allows
+            CAR {
+                string registrationNumber PK
+                string make
+                string model
+                string[] parts
+            }
+            PERSON ||--o{ NAMED-DRIVER : is
+            PERSON {
+                string driversLicense PK "The license #"
+                string(99) firstName "Only 99 characters are allowed"
+                string lastName
+                string phone UK
+                int age
+            }
+            NAMED-DRIVER {
+                string carRegistrationNumber PK, FK
+                string driverLicence PK, FK
+            }
+            MANUFACTURER only one to zero or more CAR : makes   
+        ----
+        erDiagram
+            direction LR
+            CUSTOMER ||--o{ ORDER : places
+            CUSTOMER {
+                string name
+                string custNumber
+                string sector
+            }
+            ORDER ||--|{ LINE-ITEM : contains
+            ORDER {
+                int orderNumber
+                string deliveryAddress
+            }
+            LINE-ITEM {
+                string productCode
+                int quantity
+                float pricePerUnit
+            }
+        ----
+        erDiagram
+            CAR {
+                string registrationNumber
+                string make
+                string model
+            }
+            PERSON {
+                string firstName
+                string lastName
+                int age
+            }
+            PERSON:::foo ||--|| CAR : owns
+            PERSON o{--|| HOUSE:::bar : has
+        ----
+        erDiagram
+            CUSTOMER }|..|{ DELIVERY-ADDRESS : has
+            CUSTOMER ||--o{ ORDER : places
+            CUSTOMER ||--o{ INVOICE : "liable for"
+            DELIVERY-ADDRESS ||--o{ ORDER : receives
+            INVOICE ||--|{ ORDER : covers
+            ORDER ||--|{ ORDER-ITEM : includes
+            PRODUCT-CATEGORY ||--|{ PRODUCT : contains
+            PRODUCT ||--o{ ORDER-ITEM : "ordered in"
+        """

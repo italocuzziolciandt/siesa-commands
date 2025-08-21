@@ -74,7 +74,7 @@ class FlowGeminiChatModel(BaseChatModel):
         default="gemini-2.5-pro", description="Allowed model identifier."
     )
     max_tokens: int = Field(default=65000, description="Maximum tokens to generate.")
-    temperature: float = Field(default=0.7, description="Sampling temperature.")
+    temperature: float = Field(default=0.0, description="Sampling temperature.")
     top_p: float = Field(default=0.9, description="Top P sampling.")
     top_k: int = Field(default=250, description="Top K sampling.")
 

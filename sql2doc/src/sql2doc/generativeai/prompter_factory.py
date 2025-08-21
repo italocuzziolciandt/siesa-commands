@@ -1,7 +1,7 @@
-from sql2doc.generativeai.prompter_interface import PrompterInterface
+from generativeai.prompter_interface import PrompterInterface
 from prompter.base import ConfigAuthentication
-from sql2doc.generativeai.prompter_gemini import PrompterGemini
-from sql2doc.generativeai.prompter_openai import PrompterOpenAI
+from generativeai.prompter_gemini import PrompterGemini
+from generativeai.prompter_openai import PrompterOpenAI
 from enum import Enum
 
 
@@ -29,7 +29,9 @@ class PrompterFactory:
             Prompter: An instance of the Prompter class.
         """
         if model.startswith("gemini"):
-            return PrompterGemini(config_auth=config_auth, model=model, use_agent=True)
+            return PrompterGemini(
+                config_auth=config_auth, model=model, use_agent=use_agent
+            )
         elif model.startswith("gpt") or model.startswith("o3"):
             return PrompterOpenAI(
                 config_auth=config_auth, model=model, use_agent=use_agent
